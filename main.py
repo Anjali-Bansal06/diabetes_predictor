@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 # Load dataset
-data = pd.read_csv("./diabetes.csv")
+data = pd.read_csv("./diabetes_prediction_dataset.csv")
 
 # Custom CSS
 st.markdown(
