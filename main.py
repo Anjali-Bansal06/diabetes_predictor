@@ -55,6 +55,10 @@ st.markdown(
         .result.success {
             background-color: #22c55e;
         }
+        .result.warning {
+        background-color: #facc15; /* Yellow */
+        color: black;
+        }
         .result.danger {
             background-color: #ef4444;
         }
@@ -116,14 +120,37 @@ x = data.drop(['Outcome'], axis=1)
 y = data['Outcome']
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
+# rf = RandomForestClassifier()
+# rf.fit(x_train, y_train)
+# result = rf.predict(user_data)
+
+# # Prediction Output
+# prediction = "High Risk of Diabetes" if result[0] == 1 else "Low Risk of Diabetes"
+# st.markdown(
+#     f'<div class="content result {"danger" if result[0] == 1 else "success"}">{prediction}</div>',
+#     unsafe_allow_html=True
+# )
+
 rf = RandomForestClassifier()
 rf.fit(x_train, y_train)
-result = rf.predict(user_data)
 
-# Prediction Output
-prediction = "High Risk of Diabetes" if result[0] == 1 else "Low Risk of Diabetes"
+
+proba = rf.predict_proba(user_data)[0][1]
+
+# Risk categorization
+if proba < 0.3:
+    prediction = f"Low Risk of Diabetes (Confidence: {proba:.2%})"
+    css_class = "success"
+elif proba < 0.6:
+    prediction = f"Medium Risk of Diabetes (Confidence: {proba:.2%})"
+    css_class = "warning"
+else:
+    prediction = f"High Risk of Diabetes (Confidence: {proba:.2%})"
+    css_class = "danger"
+
+# Display result
 st.markdown(
-    f'<div class="content result {"danger" if result[0] == 1 else "success"}">{prediction}</div>',
+    f'<div class="content result {css_class}">{prediction}</div>',
     unsafe_allow_html=True
 )
 
