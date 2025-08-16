@@ -112,21 +112,51 @@ def calc():
     return pd.DataFrame(output, index=[0])
 
 
-user_data = calc()
+# user_data = calc()
 
-st.markdown("<div class='card'><strong>Patient Data Summary:</strong></div>", unsafe_allow_html=True)
-st.write(user_data)
+# st.markdown("<div class='card'><strong>Patient Data Summary:</strong></div>", unsafe_allow_html=True)
+# st.write(user_data)
 
-x = df.drop(['Outcome'], axis=1)
-y = df['Outcome']
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
+# x = df.drop(['Outcome'], axis=1)
+# y = df['Outcome']
+# x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
-progress = st.progress(0)
-rf = RandomForestClassifier()
-rf.fit(x_train, y_train)
-progress.progress(100)
+# progress = st.progress(0)
+# rf = RandomForestClassifier()
+# rf.fit(x_train, y_train)
+# progress.progress(100)
+
+# result = rf.predict(user_data)
+
+
+
+features = ['Pregnancies','Glucose','BloodPressure','SkinThickness',
+            'Insulin','BMI','DiabetesPedigreeFunction','Age']
+
+
+user_input = {
+    'Pregnancies': Pregnancies,
+    'Glucose': Glucose,
+    'BloodPressure': BloodPressure,
+    'SkinThickness': SkinThickness,
+    'Insulin': Insulin,
+    'BMI': BMI,
+    'DiabetesPedigreeFunction': DiabetesPedigreeFunction,
+    'Age': Age
+}
+
+
+user_data = pd.DataFrame(user_input, index=[0], columns=features)
+
 
 result = rf.predict(user_data)
+
+
+if result[0] == 1:
+    st.error("The model predicts that this person is **Diabetic**")
+else:
+    st.success("The model predicts that this person is **Not Diabetic**")
+    
 
 st.markdown("<div class='card'><strong>Prediction Result:</strong></div>", unsafe_allow_html=True)
 output = "You are not Diabetic" if result[0] == 0 else "You are Diabetic"
